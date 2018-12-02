@@ -1,7 +1,12 @@
 const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+var mongoose = require('mongoose'); // needed here in addition to start.js
+var session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
+const app = express();
 const index = require('./routes/index');
-//const login = require('./routes/login');
 const cave = require('./routes/cave');
 const reg = require('./routes/register');
 const prefs = require('./routes/userPrefs');
@@ -9,11 +14,9 @@ const datapull = require('./routes/datapull');
 const viewData = require('./routes/viewData');
 const viewSkiData = require('./routes/viewSkiData');
 const learn_more = require('./routes/learn_more');
+//const login = require('./routes/login');
 
-const path = require('path');
-const bodyParser = require('body-parser');
 
-const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -22,6 +25,27 @@ app.use(express.static('styles'));
 app.use(express.static('node_modules'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+<<<<<<< HEAD
+=======
+
+var db = mongoose.connection;
+
+//handle mongo error
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+  // we're connected!
+});
+
+//use sessions for tracking logins
+app.use(session ({
+  secret: 'hackathon',
+  resave: true,
+  saveUninitialized: false,
+  store: new MongoStore({
+    mongooseConnection: db
+  })
+}));
+>>>>>>> 243d6a77e19a22e70562ae8bf6200876b38aa8ce
 
 //app.use('/login', login);
 
