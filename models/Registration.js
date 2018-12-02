@@ -1,11 +1,5 @@
 // Database schema for user data
 // combine usernames and preferences into single schema for ease
-<<<<<<< HEAD
-// option to separate out later
-
-const mongoose = require('mongoose');
-=======
->>>>>>> 243d6a77e19a22e70562ae8bf6200876b38aa8ce
 
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
@@ -30,20 +24,6 @@ var UserSchema = new mongoose.Schema({
   preferred_temperature: {
     type: Number, // also a number.. calc as num degrees off from ideal
   },
-<<<<<<< HEAD
-  // resort_id_list: { // keep as list for now - can always return string name
-  //   type: [Number],
-  // },
-  skill_level: {
-    type: Number, // scale 1-10?
-  },
-  preferred_temperature: {
-    type: Number, // also a number.. calc as num degrees off from ideal
-  },
-  preferred_snowtype: {
-    type: String, // string must be from a set only. Could turn string into list of ints?
-  },
-=======
   preferred_snowtype: {
     type: String, // string must be from a set only. Could turn string into list of ints?
   }
@@ -112,7 +92,6 @@ UserSchema.pre('save', function (next) {
     user.password = hash;
     next();
   })
->>>>>>> 243d6a77e19a22e70562ae8bf6200876b38aa8ce
 });
 */
 

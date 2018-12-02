@@ -25,8 +25,6 @@ app.use(express.static('styles'));
 app.use(express.static('node_modules'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-<<<<<<< HEAD
-=======
 
 var db = mongoose.connection;
 
@@ -45,7 +43,6 @@ app.use(session ({
     mongooseConnection: db
   })
 }));
->>>>>>> 243d6a77e19a22e70562ae8bf6200876b38aa8ce
 
 //app.use('/login', login);
 
