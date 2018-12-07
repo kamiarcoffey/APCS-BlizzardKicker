@@ -1,6 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-require('./models/Registration');
+require('./models/users');
+const resorts=require('./models/resorts');
 const app = require('./app');
 
 // catch 404 and forward to error handler
@@ -18,11 +19,13 @@ app.use(function (err, req, res, next) {
 });
 
 
-mongoose.connect(process.env.DATABASE, { useMongoClient: true });
+mongoose.connect(process.env.DATABASE);
 mongoose.Promise = global.Promise;
 mongoose.connection
   .on('connected', () => {
     console.log(`Mongoose connection open on ${process.env.DATABASE}`);
+    resorts.loadStartData();
+
   })
   .on('error', (err) => {
     console.log(`Connection error: ${err.message}`);
@@ -31,3 +34,5 @@ mongoose.connection
 const server = app.listen(3000, () => {
   console.log(`Express is running on port ${server.address().port}`);
 });
+
+

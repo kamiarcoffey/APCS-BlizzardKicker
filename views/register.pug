@@ -1,0 +1,186 @@
+extends ../layouts/layout
+block append head
+  link(href='/css/register.css', rel='stylesheet')
+block vars
+  - var currentPage = "register"
+block content
+  //highlight current
+  .row.justify-content-center.loginRow
+    .col-md-5.align-self-center
+      form.form-container.form-signin(action='/register' method='POST')
+        .form-body
+          h1.mb-3.font-weight-normal Register
+          label(for='inputEmail') Email address
+          input#inputEmail.form-control.mb-3(name='email'
+            type='email'
+            placeholder='Email address'
+            required
+            autofocus='')
+
+          label(for='inputUser') Username
+          input#inputUser.form-control.mb-3(name='username'
+            type='text'
+            placeholder='Username'
+            required
+            )
+          //- single lowercase, single uppercase, single digit, single symbol, at least 8 long
+          -var passPatern= '(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!-\/:-@[-`~])\\S{8,}'
+          
+          label(for='inputPassword') Password
+          input#inputPassword.pass.form-control.mb-3(name='password'
+            type='password'
+            placeholder='Password'
+            required
+            pattern= passPatern
+            )
+
+          label(for='confirmPass') Confirm Password
+          input#confirmPass.pass.form-control.mb-3(name='confirm'
+            type='password'
+            placeholder='Confirm Password'
+            required
+            title="Passwords do not match"
+            )
+          //password validation div. Only shown if password is active
+          #passValid.p-2
+            h3 Password must contain the following
+            p.invalid#letter
+              | at least one 
+              strong lowercase 
+              |letter
+            p.invalid#cap
+              | at least one 
+              strong capital 
+              |letter
+            p.invalid#symb
+              | at least one 
+              strong symbol
+            p.invalid#num
+              | at least one 
+              strong number
+            p.invalid#char
+              | at least one 
+              strong 8 characters
+            p.invalid#match
+              | passwords 
+              strong match
+          //- Based on error code passed change error message
+          -var error = ''
+          case errCode
+            when '0'
+              - error = "Sorry, the username " + username +" is already taken"
+            when '1'
+              - error = "Sorry, that email is already taken"
+            when '2'
+              - error = "Unknown Error"
+            default
+              - break
+          //- if there's an error, tell them
+          if errCode
+            .row.justify-content-center
+              p.m-1#errorMessage= error
+              a.btn.btn-danger.btn-sm.ml-1#error(href='/login') Log in?
+          button.btn.btn-primary#subButton(type='submit') Register
+
+
+block scripts
+  script.
+    $(function(){
+      var passBoxes = $(".pass");
+      var mainPass = $("#inputPassword");
+      var letter = $("#letter");
+      var capital = $("#cap");
+      var number = $("#num");
+      var length = $("#char");
+      var symbol = $("#symb");
+      var match = $("#match");
+
+      //was a button clicked?
+      var clicked = false;
+      // When the user clicks on the password field, show the message box
+      passBoxes.focus(function() {
+        $("#passValid").show();
+      });
+
+      //If the button was pressed set clicked to true
+      $(":button").mousedown(function(){
+          clicked = true;
+        });
+      
+      // When the user clicks outside of the password field, hide the message box
+      passBoxes.blur(function() {
+        //If a button is clicked don't close the page
+        if(clicked){
+          clicked= false;
+        }else{
+          $("#passValid").hide();
+          clicked=false;
+        }
+
+      });
+
+      // When the user starts to type something inside the password field
+      passBoxes.keyup(function() {
+
+        //set pattern for the confirm password to the mainPassword
+        $("#confirmPass").attr("pattern", mainPass.val());
+
+        // Validate lowercase letters
+        var lowerCaseLetters = /[a-z]/g;
+        if(mainPass.val().match(lowerCaseLetters)) {  
+          letter.removeClass("invalid");
+          letter.addClass("valid");
+        } else {
+          letter.removeClass("valid");
+          letter.addClass("invalid");
+        }
+        
+        // Validate capital letters
+        var upperCaseLetters = /[A-Z]/g;
+        if(mainPass.val().match(upperCaseLetters)) {  
+          capital.removeClass("invalid");
+          capital.addClass("valid");
+        } else {
+          capital.removeClass("valid");
+          capital.addClass("invalid");
+        }
+
+        // Validate numbers
+        var numbers = /[0-9]/g;
+        if(mainPass.val().match(numbers)) {  
+          number.removeClass("invalid");
+          number.addClass("valid");
+        } else {
+          number.removeClass("valid");
+          number.addClass("invalid");
+        }
+
+        // Validate numbers
+        var symbols = /[!" + '"' +"\#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]/g;
+        if(mainPass.val().match(symbols)) {  
+          symbol.removeClass("invalid");
+          symbol.addClass("valid");
+        } else {
+          symbol.removeClass("valid");
+          symbol.addClass("invalid");
+        }
+
+        //check if passwords are equal
+        if($("#confirmPass").val().match(mainPass.val())){
+          match.removeClass("invalid");
+          match.addClass("valid");
+        } else {
+          match.removeClass("valid");
+          match.addClass("invalid");
+        }
+        
+        // Validate length
+        if(mainPass.val().length >= 8) {
+          length.removeClass("invalid");
+          length.addClass("valid");
+        } else {
+          length.removeClass("valid");
+          length.addClass("invalid");
+        }
+      });
+    });

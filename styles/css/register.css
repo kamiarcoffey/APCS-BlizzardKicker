@@ -1,0 +1,53 @@
+.main-content{
+  font-size: 200%;
+}
+
+.main-content .btn{
+  margin:10px;
+  margin-top: 0px;
+}
+
+
+#loginModal,#registerModal{
+  color:black;
+}
+
+.form-body{
+	padding: 1rem;
+}
+
+.form-body input{
+
+}
+.loginRow{
+	margin-top: 2rem;
+}
+
+#errorMessage{
+	color:red;
+}
+
+#passValid{
+	display: none;
+    background: #bfe1f9;
+    /* padding: 1px; */
+    border-radius: 6px;
+}
+.invalid{
+	color:red;
+}
+.invalid:before{
+	color:red;
+	content: "✖";
+}
+.valid{
+	color:green;
+}
+
+.valid:before{
+	content: "✔";
+}
+
+#passValid p{
+	margin: 1px;
+}

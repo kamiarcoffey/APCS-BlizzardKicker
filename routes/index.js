@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose'); //mongodb databases
 const router = express.Router();
-const User = require('../models/Registration');
+const url = require('url');
+const User = require('../models/users');
 // const Registration = mongoose.model('Registration'); //uses registration database
 
 const { body, validationResult } = require('express-validator/check'); //checks inputs for validity
@@ -16,45 +17,9 @@ router.get('/', function (req, res, next) {
 	res.render('index');
 });
 
+//javascript for register posting to /register page
 
-
-//POST route for updating data
-router.post('/', function (req, res, next) {
-  if (req.body.email && req.body.password) { // both filled, create new user
-    var userData = {
-      email: req.body.email,
-      password: req.body.password,
-    }
-		console.log('user data constructed!');
-
-
-    User.create(userData, function (error, user) {
-      if (error) {
-        return next(error);
-      } else {
-				console.log('user created!');
-        req.session.userId = user.email;
-        return res.render('profile');
-      }
-    });
-
-	} else if (req.body.existingEmail && req.body.existingPassword) {
-    User.authenticate(req.body.existingEmail, req.body.existingPassword, function (error, user) {
-      if (error || !user) {
-        var err = new Error('Account not found.');
-        err.status = 401;
-        return next(err);
-      } else {
-        req.session.userId = user.email;
-        return res.render('profile');
-      }
-    });
-  } else {
-    var err = new Error('You must either login or register');
-    err.status = 400;
-    return next(err);
-  }
-})
+//javascript for login posting to /login page
 
 // GET route after registering
 router.get('/profile', function (req, res, next) {
@@ -75,7 +40,7 @@ router.get('/profile', function (req, res, next) {
 });
 
 // GET for logout logout
-router.get('/logout', function (req, res, next) {
+router.get('/cave/logout', function (req, res, next) {
   if (req.session) {
     // delete session object
     req.session.destroy(function (err) {

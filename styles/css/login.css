@@ -12,6 +12,17 @@
   color:black;
 }
 
-.modal-body input{
-  margin: 3px
+.form-body{
+	padding: 1rem;
+}
+
+.form-body input{
+
+}
+.loginRow{
+	margin-top: 2rem;
+}
+
+#errorMessage{
+	color:red;
 }

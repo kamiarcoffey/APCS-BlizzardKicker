@@ -2,6 +2,9 @@ extends ../layouts/layout.pug
 block append head
   link(href='/css/skiViewer.css', rel='stylesheet')
 
+block vars
+  - var currentPage = "viewSkiData"
+
 block content
   h1=cond.resort
   table
