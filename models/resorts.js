@@ -38,36 +38,38 @@ const resortInfo = new mongoose.Schema({
   },
   url: String,
   pass: [String],
+  image: String,
 },{timestamps: true});
 
 resortInfo.statics.loadStartData = function(){
   Res.countDocuments({}, function(err, count){
-    var skiInfo=[
-      {resort_name: "Steamboat", url: "/colorado/steamboat/", pass: ["Ikon"]},
-      {resort_name: "Wolf Creek Ski Area", url: "/colorado/wolf-creek-ski-area/", pass: []},
-      {resort_name: "Cooper", url: "/colorado/ski-cooper/", pass: []},
-      {resort_name: "Vail", url: "/colorado/vail/", pass: ["Epic"]},
+    var skiInfo=[ //steamboat scraping is not working
+      {resort_name: "Eldora Mountain Resort", url: "/colorado/eldora-mountain-resort/", pass: ["Ikon"]},
+      //{resort_name: "Steamboat", url: "/colorado/steamboat/", pass: ["Ikon"]},
+      {resort_name: "Copper Mountain Resort", url: "/colorado/copper-mountain-resort/", pass: ["Ikon"]},
       {resort_name: "Aspen / Snowmass", url: "/colorado/aspen-snowmass/", pass: ["Ikon"]},
+      {resort_name: "Winter Park Resort", url: "/colorado/winter-park-resort/", pass: ["Ikon"]},
+      {resort_name: "Vail", url: "/colorado/vail/", pass: ["Epic"]},
       {resort_name: "Breckenridge", url: "/colorado/breckenridge/", pass: ["Epic"]},
       {resort_name: "Telluride", url: "/colorado/telluride/", pass: ["Epic"]},
-      {resort_name: "Winter Park Resort", url: "/colorado/winter-park-resort/", pass: ["Ikon"]},
       {resort_name: "Arapahoe Basin Ski Area", url: "/colorado/arapahoe-basin-ski-area/", pass: ["Epic"]},
-      {resort_name: "Loveland", url: "/colorado/loveland/", pass: []},
       {resort_name: "Crested Butte Mountain Resort", url: "/colorado/crested-butte-mountain-resort/", pass: ["Epic"]},
+      {resort_name: "Beaver Creek", url: "/colorado/beaver-creek/", pass: ["Epic"]},
+      {resort_name: "Keystone", url: "/colorado/keystone/", pass: ["Epic"]},
       {resort_name: "Monarch Mountain", url: "/colorado/monarch-mountain/", pass: []},
       {resort_name: "Purgatory", url: "/colorado/durango-mountain-resort/", pass: []},
-      {resort_name: "Beaver Creek", url: "/colorado/beaver-creek/", pass: ["Epic"]},
-      {resort_name: "Copper Mountain Resort", url: "/colorado/copper-mountain-resort/", pass: ["Ikon"]},
-      {resort_name: "Keystone", url: "/colorado/keystone/", pass: ["Epic"]},
-      {resort_name: "Eldora Mountain Resort", url: "/colorado/eldora-mountain-resort/", pass: ["Ikon"]},
+      {resort_name: "Loveland", url: "/colorado/loveland/", pass: []},
       {resort_name: "Howelsen Hill", url: "/colorado/howelsen-hill/", pass: []},
       {resort_name: "Sunlight Mountain Resort", url: "/colorado/sunlight-mountain-resort/", pass: []},
       {resort_name: "Echo Mountain", url: "/colorado/echo-mountain/", pass: []},
       {resort_name: "Powderhorn", url: "/colorado/powderhorn/", pass: []},
       {resort_name: "Ski Granby Ranch", url: "/colorado/ski-granby-ranch/", pass: []},
       {resort_name: "Silverton Mountain", url: "/colorado/silverton-mountain/", pass: []},
+      {resort_name: "Wolf Creek Ski Area", url: "/colorado/wolf-creek-ski-area/", pass: []},
+      {resort_name: "Cooper", url: "/colorado/ski-cooper/", pass: []}
     ]
-    if (count<skiInfo.length) {
+    if (count!=skiInfo.length) {
+      Res.collection.drop();
       Res.insertMany(skiInfo);
     }
   });
@@ -87,6 +89,8 @@ resortInfo.methods.pullSkiInfo = function(){
     }
     //console.log(skiData);
     return skiData;
+  }).catch((err)=>{
+    return err;
   });
 }
 
@@ -107,8 +111,8 @@ resortInfo.statics.updateResort = function(resort_name, time){
     //is it real?
     if(resort){
       var updateTime = time; //number of minutes until next update
-      //update if it's been long enough
-      if((Date.now()-resort.updatedAt)/60000 >= updateTime){
+      //update if it's been long enough or it doesn't have conditions
+      if((Date.now()-resort.updatedAt)/60000 >= updateTime || (Object.keys(resort.condition.upper).length === 0 && resort.condition.upper.constructor === Object)){
         //pull the info and return skiInfo promise
         return resort.pullSkiInfo();
       }else{
@@ -119,12 +123,13 @@ resortInfo.statics.updateResort = function(resort_name, time){
     }
   })
   //this is thening pullSkiInfo()
-  .then(function(skiData,err){
+  .then(function(skiData){
     //update using skiData
     return Res.updateOne({resort_name: skiData.resort_name}, skiData).exec()
   })
-  .then(function(dat,err){
+  .then(function(dat){
     var message = resort_name + " updated";
+    //console.log(message);
     return message;
   })
   .catch(function(err){

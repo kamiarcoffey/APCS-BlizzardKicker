@@ -15,35 +15,36 @@ block head
 block vars
 
 .container-fluid
-  header
-    .row.justify-content-center
-      nav.navbar.navbar-expand-lg.navbar-light
-        a.navbar-brand(href="/") Blizzardkicker
-        //Makes the menu collapsable
-        button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
-          span.navbar-toggler-icon
-        .collapse.navbar-collapse#navbarSupportedContent
-          ul.navbar-nav.mr-auto
-            //- li.nav-item
-            //-   a.nav-link(href="/login") Login
-            li.nav-item#login
-              a.nav-link(href="/login") Login
-            li.nav-item#register
-              a.nav-link(href="/register") Register
-            li.nav-item#prefs
-              a.nav-link(href="/userPrefs") Preferences
-            li.nav-item#cave
-              a.nav-link(href="/cave") Cave
-            li.nav-item#viewData
-              a.nav-link(href="/viewData") View Data
-            li.nav-item#viewSkiData
-              a.nav-link(href="/viewSkiData") View Ski Data
-            script.
-              document.getElementById('#{currentPage}').classList.add('active')
-            
-
-
-  block content
+  .row.justify-content-center
+    .col
+      header
+        nav.navbar.navbar-expand-lg.navbar-light.mx-auto.w-50
+          a.navbar-brand(href="/") Blizzardkicker
+          //Makes the menu collapsable
+          button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+            span.navbar-toggler-icon
+          .collapse.navbar-collapse#navbarSupportedContent
+            ul.navbar-nav.mr-auto
+              //- li.nav-item
+              //-   a.nav-link(href="/login") Login
+              li.nav-item#login
+                a.nav-link(href="/login") Login
+              li.nav-item#register
+                a.nav-link(href="/register") Register
+              li.nav-item#cave
+                a.nav-link(href="/cave") Cave
+            if data
+                if data.currentUser
+                    span.navbar-text.m-1=  data.currentUser
+                    form.form-inline(action="/cave/logout" method="get")
+                      button.btn.btn-warning(type="submit") Log Me Out
+                else
+                  span.navbar-text Please Log In
+            else
+              p Hey, you editing this. Add data
+  .row.h-100.col-100         
+    block sidebar
+    block content
 
         
 //
@@ -51,6 +52,7 @@ block vars
   ==================================================
 // Placed at the end of the document so the pages load faster
 script( src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous")
+script(src="/jquery/dist/jquery.js")
 script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous")
 script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous")
 script.
@@ -61,6 +63,8 @@ script.
   function closeForm() {
   document.getElementById("myForm").style.display = "none";
   }
+script.
+  $('##{currentPage}').addClass('active'); 
 
 
 block scripts
