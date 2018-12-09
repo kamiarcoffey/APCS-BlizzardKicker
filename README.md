@@ -1,5 +1,5 @@
 # APCS-BlizzardKicker
-ApplePeelerCorerSlicer
+See Demo.mov for a recorded demonstration
 
 # Docker is The Preferred Way to Run!
 It allows you to run everything on any computer without running mongo or node.
@@ -12,7 +12,7 @@ It allows you to run everything on any computer without running mongo or node.
 5. To stop the service run `docker-compose down`
 
 # How to Run the Server locally
-1. Install node.js and mongodb. Follow the Mac Instructions below. 
+1. Install node.js and mongodb. Follow the Mac Instructions below.
 2. launch your mongodb server on the default port
 3. `cd` into APCS-BlizzardKicker in your terminal and type `npm run watch`
 4. go to http://localhost:3000 in your browser
